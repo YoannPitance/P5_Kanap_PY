@@ -14,7 +14,7 @@ fetch("http://localhost:3000/api/products")
 function displayProducts(products) {
   let baliseArticle = document.getElementById("items");
   for (let product of products) {
-    baliseArticle.innerHTML += `<a href="./products.html?_id=${product._id}">
+    baliseArticle.innerHTML += `<a href="./product.html?_id=${product._id}">
       <article>
         <img src="${product.imageUrl}" alt="${product.altTxt}">
         <h3 class=productName">${product.name}</h3>
