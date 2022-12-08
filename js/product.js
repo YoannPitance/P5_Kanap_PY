@@ -21,7 +21,7 @@ let thisProduct = {};
 thisProduct._id = id;
 function displayProducts(products) {
   let name = document.getElementById("title"),
-    imageUrl = document.getElementsByClassName("item__img"),
+    imageUrl = document.querySelector("article div.item__img"),
     price = document.getElementById("price"),
     description = document.getElementById("description"),
     colors = document.getElementById("colors");
@@ -30,6 +30,7 @@ function displayProducts(products) {
 
   for (let whichOne of products) {
     if (id === whichOne._id) {
+      pageName.textContent = `${whichOne.pageName}`;
       name.textContent = `${whichOne.name}`;
       imageUrl.innerHTML = `<img src="${whichOne.imageUrl}" alt="${whichOne.altTxt}">`;
       price.textContent = `${whichOne.price}`;
