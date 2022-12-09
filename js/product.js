@@ -1,40 +1,32 @@
 //récuparation de l'id produit dans l'url
 
-const urlId = new URLSearchParams(document.location.search);
-const id = urlId.get("_id");
+const urlId = new URLSearchParams(window.location.search).get("id");
 
-//recuperation des infos produits
+//récupération des données correspondant à l'id récupéré
 
-fetch("http://localhost:3000/api/products")
+fetch(`http://localhost:3000/api/products/${urlId}`)
   .then((res) => res.json())
   .then((data) => {
-    displayProducts(data);
-  })
-  .catch((error) => {
-    alert("Une erreur s'est produite: erreur 404");
+    product = data;
+    console.log(product);
+
+    //Affichage du produit demandé et remplissage des zones html avec les données de l'api
+
+    document.title = product.name; // donne la data "name" au titre de la page
+    const img = document.createElement("img");
+    img.src = product.imageUrl;
+    img.alt = product.altTxt;
+    document.getElementsByClassName("item__img")[0].appendChild(img);
+    document.getElementById("title").textContent = product.name;
+    document.getElementById("price").textContent = product.price + " ";
+    document.getElementById("description").textContent = product.description;
+
+    // Boucle forEach pour le choix des couleurs
+    product.colors.forEach((color) => {
+      const option = document.createElement("option");
+      const select = document.getElementById("colors");
+      option.value = color; // attribution de "color" comme valeur de <option>
+      option.textContent = color;
+      select.appendChild(option); // <option> devient enfant de <select>
+    });
   });
-
-//affichage données du produit
-//déclaration element produit pour html
-
-let thisProduct = {};
-thisProduct._id = id;
-function displayProducts(products) {
-  let name = document.getElementById("title"),
-    imageUrl = document.querySelector("article div.item__img"),
-    price = document.getElementById("price"),
-    description = document.getElementById("description"),
-    colors = document.getElementById("colors");
-
-  // boucle affichage des détails produits en fonction du produit selectionné
-
-  for (let whichOne of products) {
-    if (id === whichOne._id) {
-      pageName.textContent = `${whichOne.pageName}`;
-      name.textContent = `${whichOne.name}`;
-      imageUrl.innerHTML = `<img src="${whichOne.imageUrl}" alt="${whichOne.altTxt}">`;
-      price.textContent = `${whichOne.price}`;
-      description.textContent = `${whichOne.description}`;
-    }
-  }
-}

@@ -6,18 +6,19 @@ fetch("http://localhost:3000/api/products")
   .then((res) => res.json())
   .then((data) => {
     products = data;
+
     //injecter les infos articles dans le html pour afficher les produits sur la page
     for (let product of products) {
       let insertAnchor = document.createElement("a");
-      insertAnchor.setAttribute("href", `./product.html?id=${product._id}`);
+      insertAnchor.href = `./product.html?id=${product._id}`;
       insertElements.appendChild(insertAnchor);
 
       let insertArticle = document.createElement("article");
       insertAnchor.appendChild(insertArticle);
 
       let insertImage = document.createElement("img");
-      insertImage.setAttribute("src", product.imageUrl);
-      insertImage.setAttribute("alt", product.altTxt);
+      insertImage.src = product.imageUrl;
+      insertImage.alt = product.altTxt;
       insertArticle.appendChild(insertImage);
 
       let insertH3 = document.createElement("h3");
@@ -32,6 +33,6 @@ fetch("http://localhost:3000/api/products")
     }
   })
   .catch((error) => {
-    document.querySelector("h2").innerHTML =
-      "<h2>Une erreur s'est produite: erreur 404</h2>";
+    document.querySelector("h2").textContent =
+      "Une erreur s'est produite: erreur 404";
   });
