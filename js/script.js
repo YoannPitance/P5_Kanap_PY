@@ -5,12 +5,12 @@ const insertElements = document.querySelector("#items");
 fetch("http://localhost:3000/api/products")
   .then((res) => res.json())
   .then((data) => {
-    products = data;
+    const products = data;
 
     //injecter les infos articles dans le html pour afficher les produits sur la page
     for (let product of products) {
       let insertAnchor = document.createElement("a");
-      insertAnchor.href = `./product.html?id=${product._id}`;
+      insertAnchor.href = "./product.html?id=" + product._id;
       insertElements.appendChild(insertAnchor);
 
       let insertArticle = document.createElement("article");
