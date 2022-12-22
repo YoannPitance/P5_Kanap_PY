@@ -28,6 +28,13 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
       select.appendChild(option); // <option> est créé comme enfant de <select>
     });
 
+    /*1 créer le tableau sur page produit 
+    2 ajouter le tableau dan le localstorage
+    3 recuperer les infos quantité id, couleur dans une variable et verifier si les elements ne sont deja pas exisrtant sinon mise à jour qté seulement
+    4 recuperation sur la page panier
+    5 vérications des données personnelles 
+     
+    click sur valider*/
     // Récupération des otpions du produit pour l'ajout au panier
 
     //Ecoute au click du bouton valider + création de variables pour les options sélectionnées
@@ -126,11 +133,3 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
     alert("erreur de récupération des données: l'id du produit est incorrect");
     error;
   });
-
-/*1 créer le tableau sur page produit 
-2 ajouter le tableau dan le localstorage
-3 recuperer les infos quantité id, couleur dans une variable et verifier si les elements ne sont deja pas exisrtant sinon mise à jour qté seulement
-4 recuperation sur la page panier
-5 vérications des données personnelles 
- 
-click sur valider*/
