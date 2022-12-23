@@ -1,4 +1,16 @@
+/*1- recuperer les donnees dans ls
+  2- recuperer donnees api
+  3- comparer les donnees ls et api
+  4- avec id produits ls afficher caracteristiques produits de l'api
+  5- injecter dans le html
+  6- calcul du prix total de chaque article en fonction de la quantité
+  7- calcul prix total du panier
+  8- function mise à jour, retirer/ajouter une quantité ou un supprimer id
+  9- verification de formulaire
+  */
+
 // récupération des infos produits dans LS pour ajout dans page panier
+
 const numberOfProducts = localStorage.length;
 console.log(numberOfProducts);
 const cart = [];

@@ -8,7 +8,8 @@ fetch("http://localhost:3000/api/products")
     const products = data;
 
     //injecter les infos articles dans le html pour afficher les produits sur la page
-    for (let product of products) {
+    //version 1
+    /*for (let product of products) {
       let insertAnchor = document.createElement("a");
       insertAnchor.href = "./product.html?id=" + product._id;
       insertElements.appendChild(insertAnchor);
@@ -30,7 +31,21 @@ fetch("http://localhost:3000/api/products")
       insertPragraph.setAttribute("class", "productDescription");
       insertPragraph.textContent = product.description;
       insertArticle.appendChild(insertPragraph);
+    }*/
+    //version 2
+    let display = "";
+    for (product of products) {
+      display += `
+        <a href="./product.html?id=${product._id}">
+            <article>
+              <img src="${product.imageUrl}" alt="${product.altTxt}">
+              <h3 class="productName">${product.name}</h3>
+              <p class="productDescription">${product.description}</p>
+            </article>
+        </a>`;
+      console.log(display);
     }
+    document.querySelector("#items").insertAdjacentHTML("afterbegin", display);
   })
   .catch((error) => {
     document.querySelector("h2").textContent =
