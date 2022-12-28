@@ -13,39 +13,41 @@
 
 let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
 let displayProductInCart = document.querySelector("#cart__items");
+// si le local storage renvoi un panier vide
 if (cartProductInLS === null) {
   document.querySelector("h1").textContent = "Votre panier est vide";
 
   // si le panier contient un produit
 } else {
   console.log(cartProductInLS);
+  //on appelle les produits de l'API
   fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
+      // on crée quelques vairiables et une boucle d'iteration
       const products = data;
-      console.log(products);
       let numberOfProducts = cartProductInLS.length;
-      console.log(numberOfProducts);
       let cart = [];
-      console.log(displayProductInCart);
       for (i = 0; i < numberOfProducts; i++);
       {
-        console.log([i]);
+        //on crée une boucle pour parcourir chaque produit de l'API
         for (let product of products) {
+          // on crée une autre boucle pour parcourir les produits ajoutés au panier
           for (let cartProduct of cartProductInLS) {
-            cart.push(cartProductInLS);
+            //  création de nouvelles variables //    je ne sais plus pourquoi c là?(cart.push(cartProductInLS);))
             let cartIdProduct = cartProduct.idProduct;
             let cartColorProduct = cartProduct.colorProduct;
             let cartQuantityProduct = cartProduct.quantityProduct;
             let display = "";
-
+            // si les id de produits du panier correspondent aux id de produits d'API
+            // récupérer les infos des produits sélectionnés + options choisies
+            //  et afficher uniquement ces produits dans le panier
             if (cartIdProduct == product._id) {
               console.log(product.name, product.price);
               display += `
               <article class="cart__item" data-id="${product._id}" data-color="${product.color}">
                 <div class="cart__item__img">
-                  <img src="${product.imageUrl}" alt="Photographie d'un canapé">
+                  <img src="${product.imageUrl}" alt="${product.altTxt}">
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__description">
