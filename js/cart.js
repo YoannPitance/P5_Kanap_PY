@@ -11,30 +11,93 @@
 
 // récupération des infos produits dans LS pour ajout dans page panier
 
-const numberOfProducts = localStorage.length;
-console.log(numberOfProducts);
-const cart = [];
+let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
+let displayProductInCart = document.querySelector("#cart__items");
+if (cartProductInLS === null) {
+  document.querySelector("h1").textContent = "Votre panier est vide";
 
-for (let i = 0; i < numberOfProducts; i++) {
-  let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
-  cart.push(cartProductInLS);
+  // si le panier contient un produit
+} else {
   console.log(cartProductInLS);
-  console.log(cart);
+  fetch("http://localhost:3000/api/products")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      const products = data;
+      console.log(products);
+      let numberOfProducts = cartProductInLS.length;
+      console.log(numberOfProducts);
+      let cart = [];
+      console.log(displayProductInCart);
+      for (i = 0; i < numberOfProducts; i++);
+      {
+        console.log([i]);
+        for (let product of products) {
+          for (let cartProduct of cartProductInLS) {
+            cart.push(cartProductInLS);
+            let cartIdProduct = cartProduct.idProduct;
+            let cartColorProduct = cartProduct.colorProduct;
+            let cartQuantityProduct = cartProduct.quantityProduct;
+            let display = "";
 
-  // affichage des produits dans le panier
-  const displayProductInCart = document.querySelector("#cart__items");
-  console.log(displayProductInCart);
-
-  // si le panier est vide
-
-  if (cartProductInLS === null) {
-    document.querySelector("h1").textContent = "Votre panier est vide";
-    // si le panier contient un produit
-  } else {
-    fetch("http://localhost:3000/api/products")
-      .then((res) => res.json())
-      .then((products) => {
-        console.log(products);
-      });
-  }
+            if (cartIdProduct == product._id) {
+              console.log(product.name, product.price);
+              display += `
+              <article class="cart__item" data-id="${product._id}" data-color="${product.color}">
+                <div class="cart__item__img">
+                  <img src="${product.imageUrl}" alt="Photographie d'un canapé">
+                </div>
+                <div class="cart__item__content">
+                  <div class="cart__item__content__description">
+                    <h2>${product.name}</h2>
+                    <p>${cartColorProduct}</p>
+                    <p>${product.price} €</p>
+                  </div>
+                  <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                      <p>Qté : ${cartQuantityProduct}</p>
+                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="0">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                      <p class="deleteItem">Supprimer</p>
+                    </div>
+                  </div>
+                </div>
+              </article>`;
+              console.log(display);
+            }
+            document
+              .querySelector("#cart__items")
+              .insertAdjacentHTML("afterbegin", display);
+          }
+        }
+      }
+    });
 }
+
+/*let insertArticle = document.createElement("article");
+              insertArticle.setAttribute("class", "cart__item");
+              insertArticle.setAttribute("data-id", product._id);
+              insertArticle.setAttribute("data-color", cartColorProduct);
+              displayProductInCart.appendChild(insertArticle);
+
+              let insertImage = document.createElement("img");
+              insertImage.src = product.imageUrl;
+              insertImage.alt = product.altTxt;
+              insertArticle.appendChild(insertImage);
+
+              let insertDescription = document.createElement("div");
+              insertDescription.setAttribute(
+                "class",
+                "cart__item__content__description"
+              );
+              insertDescription.textContent = product.description;
+              insertArticle.appendChild(insertDescription);
+
+              let insertH2 = document.createElement("h2");
+              insertH2.textContent = product.name;
+              insertDescription.appendChild(insertH2);
+
+              let insertPrice = document.createElement("p");
+              insertPrice.textContent = product.price;
+              insertDescription.appendChild(insertPrice);*/
