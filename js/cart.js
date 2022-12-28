@@ -1,8 +1,8 @@
-/*1- recuperer les donnees dans ls
-  2- recuperer donnees api
-  3- comparer les donnees ls et api
-  4- avec id produits ls afficher caracteristiques produits de l'api
-  5- injecter dans le html
+/*1- recuperer les donnees dans ls  _______________________________________// OK
+  2- recuperer donnees api          _______________________________________// OK
+  3- comparer les donnees ls et api _______________________________________// OK
+  4- avec id produits ls afficher caracteristiques produits de l'api ______// OK
+  5- injecter dans le html          _______________________________________// OK
   6- calcul du prix total de chaque article en fonction de la quantité
   7- calcul prix total du panier
   8- function mise à jour, retirer/ajouter une quantité ou un supprimer id
@@ -14,7 +14,7 @@
 let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
 let displayProductInCart = document.querySelector("#cart__items");
 // si le local storage renvoi un panier vide
-if (cartProductInLS === null) {
+if (cartProductInLS === null || cartProductInLS == 0) {
   document.querySelector("h1").textContent = "Votre panier est vide";
 
   // si le panier contient un produit
@@ -27,7 +27,6 @@ if (cartProductInLS === null) {
       // on crée quelques vairiables et une boucle d'iteration
       const products = data;
       let numberOfProducts = cartProductInLS.length;
-      let cart = [];
       for (i = 0; i < numberOfProducts; i++);
       {
         //on crée une boucle pour parcourir chaque produit de l'API
@@ -73,6 +72,26 @@ if (cartProductInLS === null) {
               .insertAdjacentHTML("afterbegin", display);
           }
         }
+      }
+      let btnDeleteItem = document.querySelectorAll(".deleteItem");
+      console.log(btnDeleteItem);
+
+      for (let k = 0; k < btnDeleteItem.length; k++) {
+        btnDeleteItem[k].addEventListener("click", (e) => {
+          e.preventDefault();
+
+          let deleteIdClicked = cartProductInLS[k].idProduct;
+          console.log(deleteIdClicked);
+
+          cartProductInLS = cartProductInLS.filter(
+            (el) => el.idProduct !== deleteIdClicked
+          );
+          console.log(cartProductInLS);
+          localStorage.setItem("addedProduct", JSON.stringify(cartProductInLS));
+
+          alert(`Ce produit a bien été supprimé du panier`);
+          window.location.href = "cart.html";
+        });
       }
     });
 }
