@@ -5,24 +5,25 @@
   5- injecter dans le html          _______________________________________// OK
   6- calcul du prix total panier en fonction de la quantité________________// OK  
   7- function mise à jour, retirer/ajouter une quantité ou un supprimer id_// OK
-  8- verification de formulaire au click
-  9- bouton valider + envoi données à l'API avec POST
+  8- verification de formulaire au click___________________________________// OK
+  9- bouton valider + envoi données à l'API avec POST______________________// OK
+ 10- page confirmation et recup no commande + clear LS
   */
 
 // récupération des infos produits dans LS pour ajout dans page panier
 let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
-//--------------------Sélection de la balise de la page product.html dans laquel on va insérer les produits et leurs infos-------------------------
+// Sélection de la balise de la page product.html
 let displayProductInCart = document.querySelector("#cart__items");
 //
 
-//console.log(cartProductInLS);--------------
+//console.log(cartProductInLS);
 
-//_______________________________________________Déclaration des variables________________________________________________________________________
+//Déclaration des variables---------------------------------------------------------------------
 let productsInCart = [];
 function saveUpdatedCart() {
   localStorage.setItem("addedProduct", JSON.stringify(cartProductInLS));
 }
-//-------------------------variables globales pour pouvoir calculer la quantité total d'articles et le prix total du panier----------------------
+//variables globales pour calculer la quantité d'articles et le prix total
 let totalPrice = 0;
 let totalQuantity = 0;
 let cartQuantityProduct = 0;
@@ -31,11 +32,11 @@ let totalCartProductPrice = 0;
 let myProducts = [];
 const findProducts = 0;
 
-//-------------------------------------------------variables utilisées dans le fonction supprimer---------------------------------------------
+//variables fonction supprimer
 let idDelete = 0;
 let colorDelete = 0;
 
-//-------------------------------------------------variables utilisées pour la validation du panier--------------------------------------------
+//variables utilisées pour validation
 const btnValidate = document.getElementById("order");
 let firstNameError = true;
 let lastNameError = true;
@@ -43,36 +44,36 @@ let addressError = true;
 let cityError = true;
 let emailError = true;
 
-//__________________________________________________Affichage des produits du LocalStorage__________________________________________________________
+// récupération et Affichage des produits du LocalStorage
 function messagePanierVide() {
   document.querySelector("h1").innerText = "Votre panier est vide";
 
   document.getElementById("totalQuantity").innerText = 0;
   document.getElementById("totalPrice").innerText = 0;
 }
-//--------------Si le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Le panier est vide"------------
+//Si panier vide (lS vide ou le tableau qu'il contient est vide) = msg panier vide
 if (cartProductInLS === null || cartProductInLS.length === 0) {
   messagePanierVide();
-  //Si click sur bouton commander, msg panier est vide
+  //Si click sur bouton commander, msg panier vide
   btnValidate.addEventListener("click", (event) => {
     alert("Votre panier est vide !");
     event.preventDefault();
   });
 }
 
-//-----------------------------------Si le panier n'est pas vide alors, on affiche le contenu du localStorage-------------------------------------
+//Si panier contient un ou plusieurs articles = affichage produits selectionnés
 else {
   fetch("http://localhost:3000/api/products")
     .then((response) => response.json())
     .then((data) => {
       myProducts = data;
-      // recuperation la couleur, la quantité et l'id de tous les produits contenus dans le localstorage et on les met dans des variables
+      // recuperation options (couleur, quantité et l'id de tous les produits LS) et stockage dans les variables
       for (let i = 0; i < cartProductInLS.length; i++) {
         let cartColorProduct = cartProductInLS[i].colorProduct;
         let cartIdProduct = cartProductInLS[i].idProduct;
         cartQuantityProduct = cartProductInLS[i].quantityProduct;
 
-        //on ne récupère que les données des canapés dont _id (de l'api) correspondent à l'id localStorage
+        //on ne récupère que les données des canapés dont _id (de l'api) correspondent à l'id lS
         const productsInCart = data.find(
           (element) => element._id === cartIdProduct
         );
@@ -80,7 +81,7 @@ else {
         // Récupération du prix de chaque produit que l'on met dans une variable priceProductPanier
         cartPriceProduct = productsInCart.price;
 
-        //_________________________________________Ajout Balises html_______________________________________________________________
+        //insertion dans Balises html
 
         let display = "";
         display += `
@@ -111,27 +112,22 @@ else {
 
         totaux();
       }
-      //___________________________________________Appel de la fonction Supprimer un produit__________________________________________________________
       deleteProduct();
-      //_____________________________________Appel de le fonction Modifier la quantité d'un produit____________________________________________________
       changeQuantity();
     });
 
-  //_____________________________________________________________Fonctions_____________________________________________________________________
-  //----------------------Fonction Calcul de la quantité total d'articles dans le panier, au chargement de la page Panier.html-----------------
+  //Fonctions
+  //Calcul de la quantité total d'articles dans le panier
   function totalProductsQuantity() {
     totalQuantity += parseInt(cartQuantityProduct);
     console.log("quantité total d'article =", totalQuantity);
     document.getElementById("totalQuantity").innerText = totalQuantity;
   }
 
-  //-------------------------------Fonction Calcul du montant total du panier, au chargement de la page Panier.html-------------------------------
-
+  //Calcul du montant total du panier
   function totalProductsPrice() {
-    // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
     totalCartProductPrice = cartQuantityProduct * cartPriceProduct;
     // console.log(totalProductPricePanier);
-    // Calcul du prix total du panier
     totalPrice += totalCartProductPrice;
     console.log("Prix total des articles du panier =", totalPrice);
     document.getElementById("totalPrice").innerText = totalPrice;
@@ -142,7 +138,7 @@ else {
     totalProductsPrice();
   }
 
-  //---Fonction Recalcul de la quantité total d'articles dans le panier, lors de la modification de la quantité ou de la suppression d'un article---
+  //màj la quantité total d'articles dans le panier après modification ou suppression
   function updateTotalQuantity() {
     let newTotalQuantity = 0;
     for (const item of cartProductInLS) {
@@ -153,17 +149,17 @@ else {
     document.getElementById("totalQuantity").innerText = newTotalQuantity;
   }
 
-  //----------Fonction maj du montant total du panier, lors de la modification de la quantité ou de la suppression d'un article-------------
+  //maj prix total du panier après modification ou suppression
   function updateTotalPrice() {
     let newTotalPrice = 0;
-    //(1) On fait une boucle sur le productRegisterInLocalStorage et dans cette boucle,
+    //boucle sur le cartProductInLS +
     for (const item of cartProductInLS) {
       const cartIdProduct = item.idProduct;
       const quantityProductsInLS = item.quantityProduct;
-      //(2) on vérifie si l'id correspond
+      //... vérification correspondance des id
       const findProducts = myProducts.find((el) => el._id === cartIdProduct);
       //console.log(findProducts);
-      //(3) et si c'est le cas, on récupère le prix.
+      //... si ok récupération du prix dans ls
       if (findProducts) {
         const newTotalCartProductPrice =
           findProducts.price * quantityProductsInLS;
@@ -175,7 +171,7 @@ else {
     }
   }
 
-  //----------------------------------Fonction Modifier la quantité d'un article du panier--------------------------------------------------
+  //Modification quantité produit
   let errorQuantityMsg = false;
   function changeQuantity() {
     let changeQuantity = document.querySelectorAll(".itemQuantity");
@@ -186,14 +182,12 @@ else {
 
         let productInTagArticle = item.closest("article");
         //console.log(productInTagArticle);
-
         let pointArticleInLS = cartProductInLS.find(
           (el) =>
             el.idProduct === productInTagArticle.dataset.id &&
             el.colorProduct === productInTagArticle.dataset.color
         );
-
-        // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
+        // Si quantité comprise entre 1 et 100 et que c'est un nombre entier,...
 
         if (
           choiceQuantity > 0 &&
@@ -202,12 +196,12 @@ else {
         ) {
           parseChoiceQuantity = parseInt(choiceQuantity);
           pointArticleInLS.quantityProduct = parseChoiceQuantity;
-          // Et, on recalcule la quantité et le prix total du panier
+          //recalcul de la quantité et du prix total du panier
           updateTotalQuantity();
           updateTotalPrice();
           errorQuantityMsg = false;
         }
-        // Sinon, aucun changemeny + msg erreur
+        // Sinon, aucun changement + msg erreur
         else {
           item.value = pointArticleInLS.quantityProduct;
           errorQuantityMsg = true;
@@ -221,7 +215,7 @@ else {
     });
   }
 
-  //----------------------------------Fonction Suppression d'un article du panier--------------------------------------------------
+  //Suppression d'un produit
   function deleteProduct() {
     let productToDelete = document.querySelectorAll(".deleteItem");
     productToDelete.forEach((productToDelete) => {
@@ -241,11 +235,11 @@ else {
 
         alert("Ce produit a bien été supprimé du panier.");
 
-        // On supprime physiquement la balise <article> du produit que l'on supprime depuis son parent, si elle existe
+        // suppression balise <article> du produit que l'on supprime depuis son parent
         if (productInTagArticle.parentNode) {
           productInTagArticle.parentNode.removeChild(productInTagArticle);
         }
-        //-----Si panier vide (ou le tableau qu'il contient est vide),...
+        //Si panier vide (ou le tableau qu'il contient est vide)
 
         if (cartProductInLS === null || cartProductInLS.length === 0) {
           messagePanierVide();
@@ -366,8 +360,8 @@ else {
     } else {
       //enregistrement du formulaire et validation de la commande
 
-      // On vérifie que tous les champs sont bien renseignés, sinon on indique un message à l'utilisateur
-      // On vérifie qu'aucun champ n'est vide
+      // verification que tous les champs soient bien renseignés, sinon msg erreur
+      // verification qu'aucun champ n'est vide
       if (
         !firstName.value ||
         !lastName.value ||
@@ -378,7 +372,7 @@ else {
         alert("Vous devez renseigner tous les champs !");
         event.preventDefault();
       }
-      // On vérifie que les champs sont correctement remplis suivant les regex mises en place
+      // verification que les champs soient correctement remplis
       else if (
         firstNameError === true ||
         lastNameError === true ||
@@ -389,6 +383,49 @@ else {
         alert(
           "Veuillez vérifier les champs du formulaire et les remplir correctement !"
         );
+        event.preventDefault();
+      } else {
+        //Récupération des id des produits du panier, dans le localStorage
+        let idProducts = [];
+        for (let l = 0; l < cartProductInLS.length; l++) {
+          idProducts.push(cartProductInLS[l].idProduct);
+        }
+        //console.log(idProducts);
+        // création commande avec objet "Contact" + "Produits du panier"
+        const order = {
+          contact: {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value,
+          },
+          products: idProducts,
+        };
+        //console.log(order);
+        // envoi des données de commande à l'api
+        const options = {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(order),
+        };
+        //console.log(options);
+        fetch("http://localhost:3000/api/products/order", options)
+          .then((response) => response.json())
+          .then((data) => {
+            //console.log(data);
+            // redirection vers page de confirmation en passant l'orderId dans l'URL
+            document.location.href = `confirmation.html?orderId=${data.orderId}`;
+          })
+          .catch((err) => {
+            console.log("Erreur Fetch product.js", err);
+            alert("Un problème a été rencontré lors de l'envoi du formulaire.");
+          });
+        // effacement du LS
+        localStorage.clear();
       }
     }
   });
