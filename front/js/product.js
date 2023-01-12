@@ -1,14 +1,12 @@
 //récuparation de l'id produit dans l'url
-
 const urlId = new URLSearchParams(window.location.search).get("id");
 
 //récupération des données correspondant à l'id récupéré
-
 fetch(`http://localhost:3000/api/products/${urlId}`)
   .then((res) => res.json())
   .then((chosenProduct) => {
-    //Affichage du produit demandé et remplissage des zones html avec les données de l'api
 
+    //Affichage du produit demandé et remplissage des zones html avec les données de l'api
     document.title = chosenProduct.name;
     const img = document.createElement("img");
     img.src = chosenProduct.imageUrl;
@@ -27,14 +25,7 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
       option.textContent = color;
       select.appendChild(option); // <option> est créé comme enfant de <select>
     });
-
-    /*1 créer le tableau sur page produit 
-    2 ajouter le tableau dan le localstorage
-    3 recuperer les infos quantité id, couleur dans une variable et verifier si les elements ne sont deja pas exisrtant sinon mise à jour qté seulement
-    4 recuperation sur la page panier
-    5 vérications des données personnelles 
-     
-    click sur valider*/
+    
     // Récupération des otpions du produit pour l'ajout au panier
 
     //Ecoute au click du bouton valider + création de variables pour les options sélectionnées
@@ -48,10 +39,10 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
 
       // condition de récupération des otpions choisies
       if (
-        whatColor !== "" && //  si la couleur choisie est différente de "vide" ET
-        howMany > 0 && //  si la quantité est supérieure à 0 ET
-        howMany <= 100 && //  inférieure à 100 ET
-        Number.isInteger(howMany) // que la quantité est bien d'un nombre entier
+        whatColor !== "" &&
+        howMany > 0 && 
+        howMany <= 100 && 
+        Number.isInteger(howMany) 
       ) {
         // création de l'objet correspondant aux options choisies du produit
         let settingsProduct = {
@@ -59,11 +50,11 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
           colorProduct: whatColor,
           quantityProduct: howMany,
         };
-        // création d'une variable de condition pour pouvoir afficher des alertes à chaque mise à jour de produit
+        // création d'une variable pour afficher des alertes à chaque mise à jour de produit
         let updateLS = false;
         // fonction de sauvegarde du panier dans le local storge
         let saveCartToLS = () => {
-          // recherche si le produit est déja existant dans le panier si oui seule la quantité doit ^tre ajoutée
+          // recherche si le produit est déja existant dans le panier si oui seule la quantité doit être ajoutée
           let findProduct = cartProductInLS.find((x) => {
             return (
               x.idProduct === settingsProduct.idProduct &&
@@ -80,7 +71,7 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
               findProduct.quantityProduct =
                 Number(findProduct.quantityProduct) +
                 Number(settingsProduct.quantityProduct);
-              // message de mise ç jour quantité produit si choisie entre 1 et 100
+              // message de mise à jour quantité produit si choisie entre 1 et 100
               alert(
                 `La quantité du produit ${chosenProduct.name} de couleur ${whatColor} a bien été mise à jour`
               );
