@@ -5,7 +5,6 @@ const urlId = new URLSearchParams(window.location.search).get("id");
 fetch(`http://localhost:3000/api/products/${urlId}`)
   .then((res) => res.json())
   .then((chosenProduct) => {
-
     //Affichage du produit demandé et remplissage des zones html avec les données de l'api
     document.title = chosenProduct.name;
     const img = document.createElement("img");
@@ -25,7 +24,7 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
       option.textContent = color;
       select.appendChild(option); // <option> est créé comme enfant de <select>
     });
-    
+
     // Récupération des otpions du produit pour l'ajout au panier
 
     //Ecoute au click du bouton valider + création de variables pour les options sélectionnées
@@ -40,9 +39,9 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
       // condition de récupération des otpions choisies
       if (
         whatColor !== "" &&
-        howMany > 0 && 
-        howMany <= 100 && 
-        Number.isInteger(howMany) 
+        howMany > 0 &&
+        howMany <= 100 &&
+        Number.isInteger(howMany)
       ) {
         // création de l'objet correspondant aux options choisies du produit
         let settingsProduct = {
@@ -50,10 +49,12 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
           colorProduct: whatColor,
           quantityProduct: howMany,
         };
+
         // création d'une variable pour afficher des alertes à chaque mise à jour de produit
         let updateLS = false;
+
         // fonction de sauvegarde du panier dans le local storge
-        let saveCartToLS = () => {
+        function saveCartToLS() {
           // recherche si le produit est déja existant dans le panier si oui seule la quantité doit être ajoutée
           let findProduct = cartProductInLS.find((x) => {
             return (
@@ -61,6 +62,7 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
               x.colorProduct === settingsProduct.colorProduct
             );
           });
+
           //  produit identique existant donc
           if (findProduct) {
             let total =
@@ -71,6 +73,7 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
               findProduct.quantityProduct =
                 Number(findProduct.quantityProduct) +
                 Number(settingsProduct.quantityProduct);
+
               // message de mise à jour quantité produit si choisie entre 1 et 100
               alert(
                 `La quantité du produit ${chosenProduct.name} de couleur ${whatColor} a bien été mise à jour`
@@ -87,19 +90,21 @@ fetch(`http://localhost:3000/api/products/${urlId}`)
             updateLS = true;
             cartProductInLS.push(settingsProduct);
           }
+
           // conversion au format JSON des données pour sauvegarde dans LS avec la clé "addedProduct"
           localStorage.setItem("addedProduct", JSON.stringify(cartProductInLS));
-        };
+        }
+
         let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
+
         // si "addedProduct" est déjà présent dans LS alors utilisation de la fonction de mise à jour "saveCartoLS"
         if (cartProductInLS) {
           saveCartToLS();
-          console.log(cartProductInLS);
+
           // sinon ajout du produit et affichage d'un message de confirmation d'ajout d'un 1er produit
         } else {
           cartProductInLS = [];
           saveCartToLS();
-          console.log(cartProductInLS);
 
           updateLS = false;
           alert(

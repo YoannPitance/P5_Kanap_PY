@@ -1,10 +1,13 @@
-
 // récupération des infos produits dans LS pour ajout dans page panier
 let cartProductInLS = JSON.parse(localStorage.getItem("addedProduct"));
 // Sélection de la balise de la page product.html
+
 let displayProductInCart = document.querySelector("#cart__items");
 //
 
+cartProductInLS.sort(function (a, b) {
+  return a.idProduct.localeCompare(b.idProduct);
+});
 //console.log(cartProductInLS);
 
 //Déclaration des variables---------------------------------------------------------------------
@@ -12,6 +15,7 @@ let productsInCart = [];
 function saveUpdatedCart() {
   localStorage.setItem("addedProduct", JSON.stringify(cartProductInLS));
 }
+
 //variables globales pour calculer la quantité d'articles et le prix total
 let totalPrice = 0;
 let totalQuantity = 0;
@@ -109,7 +113,8 @@ else {
   //Calcul de la quantité total d'articles dans le panier
   function totalProductsQuantity() {
     totalQuantity += parseInt(cartQuantityProduct);
-    console.log("quantité total d'article =", totalQuantity);
+
+    //console.log("quantité total d'article =", totalQuantity);
     document.getElementById("totalQuantity").innerText = totalQuantity;
   }
 
@@ -118,7 +123,8 @@ else {
     totalCartProductPrice = cartQuantityProduct * cartPriceProduct;
     // console.log(totalProductPricePanier);
     totalPrice += totalCartProductPrice;
-    console.log("Prix total des articles du panier =", totalPrice);
+
+    //console.log("Prix total des articles du panier =", totalPrice);
     document.getElementById("totalPrice").innerText = totalPrice;
   }
 
@@ -133,7 +139,7 @@ else {
     for (const item of cartProductInLS) {
       newTotalQuantity += parseInt(item.quantityProduct);
     }
-    console.log("Mise à jour du nombre total de produits =", newTotalQuantity);
+    //console.log("Mise à jour du nombre total de produits =", newTotalQuantity);
 
     document.getElementById("totalQuantity").innerText = newTotalQuantity;
   }
@@ -153,7 +159,7 @@ else {
         const newTotalCartProductPrice =
           findProducts.price * quantityProductsInLS;
         newTotalPrice += newTotalCartProductPrice;
-        console.log("Nouveau prix total panier", newTotalPrice);
+        //console.log("Nouveau prix total panier", newTotalPrice);
       }
 
       document.getElementById("totalPrice").innerText = newTotalPrice;
@@ -189,6 +195,7 @@ else {
           updateTotalQuantity();
           updateTotalPrice();
           errorQuantityMsg = false;
+          saveUpdatedCart();
         }
         // Sinon, aucun changement + msg erreur
         else {
@@ -203,6 +210,8 @@ else {
       });
     });
   }
+  //function grouper les produits par id dans le panier si plusieurs articles avec meme id mais options différentes
+  function groupSameId() {}
 
   //Suppression d'un produit
   function deleteProduct() {
@@ -212,7 +221,7 @@ else {
         e.preventDefault();
 
         let productInTagArticle = productToDelete.closest("article");
-        console.log(productInTagArticle);
+        //console.log(productInTagArticle);
 
         cartProductInLS = cartProductInLS.filter(
           (el) =>
@@ -410,7 +419,7 @@ else {
             document.location.href = `confirmation.html?orderId=${data.orderId}`;
           })
           .catch((err) => {
-            console.log("Erreur Fetch product.js", err);
+            //console.log("Erreur Fetch product.js", err);
             alert("Un problème a été rencontré lors de l'envoi du formulaire.");
           });
         // effacement du LS

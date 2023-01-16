@@ -8,5 +8,5 @@ if (urlOrderId === null || urlOrderId === "") {
 } else {
   const orderId = document.getElementById("orderId");
   orderId.innerText = urlOrderId;
-  console.log(orderId);
+  //console.log(orderId);
 }
