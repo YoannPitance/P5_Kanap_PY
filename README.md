@@ -9,10 +9,10 @@
 * Comprendre et maitriser le fonctionnement d'une API.
 * Utiliser Javascript et les fonctions pour mettre en place toutes les fonctionnalités techniques du site (affichage d'un produit, requête Api, calcul quantité et prix etc..)
 * Récupérer des paramêtres d'URL pour pouvoir passer les données d'un **_id** d'une page à une autre.
-* Création d'une page panier fonctionnelle avec gestion d'ajout, de modification et de suppression de prosuits, gestion de calcul de quantité et de prix.
+* Création d'une page panier fonctionnelle avec gestion d'ajout, de modification et de suppression de produits, gestion de calcul de quantité et de prix.
 * Utilisation de LocalStorage pour le panier et pouvoir manipuler les données sauvegardées.
 * Création d'une page validation avec numéro d'enregistrement et suppression des données du LocalStorage.
-* Gestion des erreurs eventuelles.
+* Gestion des erreurs éventuelles.
 <br>
 
 **PROJET validé!**<br>
